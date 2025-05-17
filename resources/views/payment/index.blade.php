@@ -1,13 +1,6 @@
 <x-guest-layout>
     <!-- Page Header -->
-    <div class="bg-white border-b">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <h1 class="text-2xl font-bold text-gray-900">Konfirmasi Pembayaran</h1>
-            <p class="mt-2 text-gray-600">
-                Verifikasi dan pantau status pembayaran Anda dengan mudah
-            </p>
-        </div>
-    </div>
+    
 
     <!-- Steps Section -->
     <div class="py-8 sm:py-12 bg-white">
@@ -118,6 +111,7 @@
                                                 <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIM</th>
                                                 <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
                                                 <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Jenis</th>
+                                                <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Jumlah</th>
                                                 <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                                 <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Tanggal</th>
                                             </tr>
@@ -129,9 +123,11 @@
                                                     <td class="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
                                                         <div>{{ $payment->student_name }}</div>
                                                         <div class="text-xs text-gray-500 sm:hidden">{{ $payment->payment_type }}</div>
+                                                        <div class="text-xs text-gray-500 sm:hidden">Rp {{ number_format($payment->amount, 0, ',', '.') }}</div>
                                                         <div class="text-xs text-gray-500 sm:hidden">{{ $payment->created_at->format('d M Y') }}</div>
                                                     </td>
                                                     <td class="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 hidden sm:table-cell">{{ $payment->payment_type }}</td>
+                                                    <td class="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 hidden sm:table-cell">Rp {{ number_format($payment->amount, 0, ',', '.') }}</td>
                                                     <td class="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
                                                         @if($payment->status == 'verified')
                                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">

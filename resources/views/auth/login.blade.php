@@ -8,9 +8,7 @@
                     <x-auth-session-status class="mb-4" :status="session('status')" />
 
                     <div class="mb-6 text-center">
-                        <div class="inline-flex items-center justify-center mb-4">
-                            <img src="{{ asset('images/logo.svg') }}" alt="USBYPKP Logo" class="h-20 w-20">
-                        </div>
+                        
                         <h2 class="text-2xl font-bold text-gray-900 mb-1">Selamat Datang Kembali</h2>
                         <p class="text-gray-600">Masukkan kredensial Anda untuk melanjutkan</p>
                     </div>

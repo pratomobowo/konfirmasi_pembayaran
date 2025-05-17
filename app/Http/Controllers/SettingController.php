@@ -6,6 +6,7 @@ use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Config;
 
 class SettingController extends Controller
 {
@@ -36,7 +37,7 @@ class SettingController extends Controller
         }
 
         $request->validate([
-            'mail_mailer' => 'required|string',
+            'mail_driver' => 'required|string',
             'mail_host' => 'required|string',
             'mail_port' => 'required|numeric',
             'mail_username' => 'required|email',
@@ -48,7 +49,7 @@ class SettingController extends Controller
 
         // Update each SMTP setting
         $smtpKeys = [
-            'mail_mailer', 'mail_host', 'mail_port', 'mail_username',
+            'mail_driver', 'mail_host', 'mail_port', 'mail_username',
             'mail_encryption', 'mail_from_address', 'mail_from_name'
         ];
 
@@ -87,9 +88,9 @@ class SettingController extends Controller
             
             // Get SMTP settings
             $config = [
-                'transport' => Setting::getValueByKey('mail_mailer', 'smtp'),
-                'host' => Setting::getValueByKey('mail_host', 'smtp.gmail.com'),
-                'port' => Setting::getValueByKey('mail_port', '587'),
+                'driver' => Setting::getValueByKey('mail_driver', 'smtp'),
+                'host' => Setting::getValueByKey('mail_host', 'smtp.mailtrap.io'),
+                'port' => Setting::getValueByKey('mail_port', 587),
                 'encryption' => Setting::getValueByKey('mail_encryption', 'tls'),
                 'username' => Setting::getValueByKey('mail_username', ''),
                 'password' => Setting::getValueByKey('mail_password', ''),
@@ -98,13 +99,22 @@ class SettingController extends Controller
                     'name' => Setting::getValueByKey('mail_from_name', 'USBYPKP'),
                 ],
             ];
+
+            // Update mail configuration dynamically
+            config(['mail.mailers.smtp.host' => $config['host']]);
+            config(['mail.mailers.smtp.port' => $config['port']]);
+            config(['mail.mailers.smtp.encryption' => $config['encryption']]);
+            config(['mail.mailers.smtp.username' => $config['username']]);
+            config(['mail.mailers.smtp.password' => $config['password']]);
+            config(['mail.from.address' => $config['from']['address']]);
+            config(['mail.from.name' => $config['from']['name']]);
             
             // Send test email
-            Mail::config($config)->raw('Test email from USBYPKP application.', function($message) use ($testEmail) {
+            Mail::raw('Test email from USBYPKP application.', function ($message) use ($testEmail) {
                 $message->to($testEmail)
                     ->subject('USBYPKP - Test Email');
             });
-            
+
             return redirect()->route('admin.settings.index')
                 ->with('success', 'Email pengujian berhasil dikirim ke ' . $testEmail);
         } catch (\Exception $e) {

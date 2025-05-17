@@ -143,9 +143,10 @@
                                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                             <span class="text-gray-500 sm:text-sm">Rp</span>
                                         </div>
-                                        <input type="number" name="amount" id="amount" value="{{ old('amount') }}" min="1" required
+                                        <input type="text" name="amount_display" id="amount_display" value="{{ old('amount') ? number_format(old('amount'), 0, ',', '.') : '' }}" required
                                             class="pl-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                                            placeholder="0">
+                                            placeholder="0" inputmode="numeric">
+                                        <input type="hidden" name="amount" id="amount" value="{{ old('amount') }}">
                                     </div>
                                 </div>
                             </div>
@@ -199,7 +200,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             const fileInput = document.getElementById('payment_proof');
             const fileNameDisplay = document.getElementById('file-name');
+            const amountDisplay = document.getElementById('amount_display');
+            const amountInput = document.getElementById('amount');
             
+            // File input handler
             fileInput.addEventListener('change', function() {
                 if (fileInput.files.length > 0) {
                     fileNameDisplay.textContent = 'File dipilih: ' + fileInput.files[0].name;
@@ -207,6 +211,49 @@
                 } else {
                     fileNameDisplay.textContent = '';
                 }
+            });
+            
+            // Format input jumlah pembayaran dengan pemisah ribuan
+            amountDisplay.addEventListener('input', function(e) {
+                // Hapus karakter selain angka
+                let value = this.value.replace(/\D/g, '');
+                
+                // Simpan posisi kursor
+                const cursorPosition = this.selectionStart;
+                const lengthBefore = this.value.length;
+                
+                // Konversi ke format mata uang Indonesia
+                if (value) {
+                    // Simpan nilai numerik asli ke input tersembunyi
+                    amountInput.value = value;
+                    
+                    // Format dengan pemisah ribuan
+                    value = new Intl.NumberFormat('id-ID').format(value);
+                    this.value = value;
+                    
+                    // Perhitungan posisi kursor baru
+                    const lengthAfter = this.value.length;
+                    const cursorShift = lengthAfter - lengthBefore;
+                    this.setSelectionRange(cursorPosition + cursorShift, cursorPosition + cursorShift);
+                } else {
+                    this.value = '';
+                    amountInput.value = '';
+                }
+            });
+            
+            // Validasi form saat submit
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                // Pastikan nilai amount disimpan dalam format numerik
+                amountInput.value = amountInput.value.replace(/\D/g, '');
+                
+                // Validasi jumlah minimal
+                if (parseInt(amountInput.value) < 1) {
+                    e.preventDefault();
+                    alert('Jumlah pembayaran harus minimal Rp 1');
+                    return false;
+                }
+                return true;
             });
         });
     </script>
