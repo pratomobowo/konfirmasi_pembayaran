@@ -1,0 +1,17 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Circle background -->
+  <circle cx="100" cy="100" r="90" fill="#3b82f6" />
+  
+  <!-- Inner circle -->
+  <circle cx="100" cy="100" r="75" fill="white" />
+  
+  <!-- Dollar sign stylized for payment system -->
+  <path d="M100 40 C 85 40, 75 50, 75 65 C 75 80, 85 90, 100 90 C 115 90, 125 100, 125 115 C 125 130, 115 140, 100 140 C 85 140, 75 130, 75 115" 
+        stroke="#3b82f6" stroke-width="12" fill="none" stroke-linecap="round" />
+  
+  <!-- Vertical line of dollar sign -->
+  <line x1="100" y1="40" x2="100" y2="140" stroke="#3b82f6" stroke-width="12" stroke-linecap="round" />
+  
+  <!-- Text at the bottom -->
+  <text x="100" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-weight="bold" font-size="24" fill="#3b82f6">USBYPKP</text>
+</svg> 
