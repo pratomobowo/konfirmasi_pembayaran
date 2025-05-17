@@ -1,23 +1,23 @@
 <x-guest-layout>
     <!-- Page Header -->
-    <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <h1 class="text-3xl font-bold">Cek Status Pembayaran</h1>
-            <p class="mt-2 text-blue-100">
+    <div class="bg-white border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h1 class="text-2xl font-bold text-gray-900">Cek Status Pembayaran</h1>
+            <p class="mt-2 text-gray-600">
                 Masukkan NIM Anda untuk melihat status pembayaran
             </p>
         </div>
     </div>
 
     <div class="py-12 bg-gray-50">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Form Pencarian -->
             @if(!isset($nimFound) || !$nimFound)
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-8">
                 <div class="p-6 md:p-8 text-gray-900">
                     <div class="mb-8">
                         <div class="flex space-x-4 items-center mb-6">
-                            <div class="bg-blue-100 p-2 rounded-full">
+                            <div class="bg-blue-100 p-3 rounded-full">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                                 </svg>
@@ -25,7 +25,7 @@
                             <h2 class="text-2xl font-semibold text-gray-900">Track Status Pembayaran</h2>
                         </div>
                         
-                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+                        <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6 rounded-r-md">
                             <div class="flex">
                                 <div class="flex-shrink-0">
                                     <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -42,7 +42,7 @@
                     </div>
 
                     @if (session('error'))
-                        <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4">
+                        <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-md">
                             <div class="flex">
                                 <div class="flex-shrink-0">
                                     <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -56,7 +56,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('payment.check') }}" method="GET" class="max-w-lg mx-auto">
+                    <form action="{{ route('payment.check') }}" method="GET" class="max-w-lg mx-auto bg-gray-50 p-6 rounded-lg">
                         <div class="mb-8">
                             <label for="nim" class="block text-sm font-medium text-gray-700 mb-2">Nomor Induk Mahasiswa (NIM)</label>
                             <div class="mt-1 relative rounded-md shadow-sm">
@@ -78,7 +78,7 @@
                         </div>
                         
                         <div class="text-center">
-                            <button type="submit" class="inline-flex justify-center py-3 px-8 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            <button type="submit" class="inline-flex justify-center py-3 px-8 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
@@ -161,21 +161,21 @@
                     <!-- Payment Detail Cards -->
                     <div class="space-y-6 mb-8">
                         @foreach($payments as $payment)
-                            <div class="border border-gray-200 rounded-lg overflow-hidden">
+                            <div class="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                                 <div class="px-6 py-4 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
                                     <h3 class="font-semibold text-lg">{{ $payment->payment_type }}</h3>
                                     <div>
                                         @if($payment->status == 'verified')
-                                            <span class="text-green-800 text-sm font-medium flex items-center">
+                                            <span class="px-3 py-1 rounded-full bg-green-100 text-green-800 text-sm font-medium flex items-center">
                                                 <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                                 </svg>
                                                 Terverifikasi
                                             </span>
                                         @elseif($payment->status == 'rejected')
-                                            <span class="text-red-800 text-sm font-medium">Ditolak</span>
+                                            <span class="px-3 py-1 rounded-full bg-red-100 text-red-800 text-sm font-medium">Ditolak</span>
                                         @else
-                                            <span class="text-yellow-800 text-sm font-medium">Menunggu Verifikasi</span>
+                                            <span class="px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 text-sm font-medium">Menunggu Verifikasi</span>
                                         @endif
                                     </div>
                                 </div>
@@ -217,7 +217,7 @@
                                         Diperbarui: {{ $payment->updated_at->format('d M Y H:i') }}
                                     </div>
                                     <div class="flex space-x-2">
-                                        <a href="{{ route('payment.detail', $payment->id) }}" class="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-800 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        <a href="{{ route('payment.detail', $payment->id) }}" class="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-800 text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                                             <span class="flex items-center">
                                                 <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -228,7 +228,7 @@
                                         </a>
                                         
                                         @if($payment->status == 'rejected')
-                                            <a href="{{ route('payment.create') }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                            <a href="{{ route('payment.create') }}" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                                                 Upload Ulang
                                             </a>
                                         @endif
@@ -240,7 +240,7 @@
                     
                     <!-- Action Button -->
                     <div class="mt-6 text-center">
-                        <a href="{{ route('payment.track') }}" class="inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <a href="{{ route('payment.track') }}" class="inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
@@ -256,7 +256,7 @@
                 <h2 class="text-xl font-semibold text-gray-900 mb-6">Pertanyaan Umum</h2>
                 
                 <div class="space-y-4">
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg hover:shadow-md transition-shadow">
                         <div class="p-5 border-b">
                             <button class="flex w-full text-left" onclick="toggleFaq('faq1')">
                                 <span class="text-blue-600 mr-2">
@@ -279,7 +279,7 @@
                         </div>
                     </div>
                     
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg hover:shadow-md transition-shadow">
                         <div class="p-5 border-b">
                             <button class="flex w-full text-left" onclick="toggleFaq('faq2')">
                                 <span class="text-blue-600 mr-2">
