@@ -1,1 +1,8 @@
 *.sqlite*
+*.sql
+!mysql_dump_tables_only.sql
+!sqlite_data.sql
+!complete_schema.sql
+.env
+/__pycache__/
+.

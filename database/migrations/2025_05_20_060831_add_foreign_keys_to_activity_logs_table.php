@@ -11,13 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('settings', function (Blueprint $table) {
-            $table->id();
-            $table->string('key')->unique();
-            $table->text('value')->nullable();
-            $table->string('group')->nullable();
-            $table->string('description')->nullable();
-            $table->timestamps();
+        Schema::table('activity_logs', function (Blueprint $table) {
+            $table->foreign(['user_id'], null)->references(['id'])->on('users')->onUpdate('no action')->onDelete('set null');
         });
     }
 
@@ -26,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('settings');
+        Schema::table('activity_logs', function (Blueprint $table) {
+            $table->dropForeign();
+        });
     }
 };

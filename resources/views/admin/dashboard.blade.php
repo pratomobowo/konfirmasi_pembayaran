@@ -14,62 +14,70 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
             <!-- Card 1 - Total Pengguna -->
             <div class="bg-white overflow-hidden shadow-sm rounded-lg">
-                <div class="p-6 flex items-center">
-                    <div class="rounded-md bg-blue-500 p-3">
-                        <svg class="h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
+                <a href="{{ route('admin.users.index') }}" class="block hover:bg-gray-50 transition-colors duration-150">
+                    <div class="p-6 flex items-center">
+                        <div class="rounded-md bg-blue-500 p-3">
+                            <svg class="h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                        </div>
+                        <div class="ml-5">
+                            <div class="text-sm font-medium text-gray-500">Total Pengguna</div>
+                            <div class="text-3xl font-semibold text-gray-900">{{ $totalUsers ?? 0 }}</div>
+                        </div>
                     </div>
-                    <div class="ml-5">
-                        <div class="text-sm font-medium text-gray-500">Total Pengguna</div>
-                        <div class="text-3xl font-semibold text-gray-900">{{ $totalUsers ?? 0 }}</div>
-                    </div>
-                </div>
+                </a>
             </div>
 
             <!-- Card 2 - Total Pembayaran -->
             <div class="bg-white overflow-hidden shadow-sm rounded-lg">
-                <div class="p-6 flex items-center">
-                    <div class="rounded-md bg-indigo-500 p-3">
-                        <svg class="h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                        </svg>
+                <a href="{{ route('admin.payments') }}" class="block hover:bg-gray-50 transition-colors duration-150">
+                    <div class="p-6 flex items-center">
+                        <div class="rounded-md bg-indigo-500 p-3">
+                            <svg class="h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                            </svg>
+                        </div>
+                        <div class="ml-5">
+                            <div class="text-sm font-medium text-gray-500">Total Pembayaran</div>
+                            <div class="text-3xl font-semibold text-gray-900">{{ $totalPayments ?? 0 }}</div>
+                        </div>
                     </div>
-                    <div class="ml-5">
-                        <div class="text-sm font-medium text-gray-500">Total Pembayaran</div>
-                        <div class="text-3xl font-semibold text-gray-900">{{ $totalPayments ?? 0 }}</div>
-                    </div>
-                </div>
+                </a>
             </div>
 
             <!-- Card 3 - Menunggu Verifikasi -->
             <div class="bg-white overflow-hidden shadow-sm rounded-lg">
-                <div class="p-6 flex items-center">
-                    <div class="rounded-md bg-yellow-500 p-3">
-                        <svg class="h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+                <a href="{{ route('admin.payments', ['status' => 'pending']) }}" class="block hover:bg-gray-50 transition-colors duration-150">
+                    <div class="p-6 flex items-center">
+                        <div class="rounded-md bg-yellow-500 p-3">
+                            <svg class="h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div class="ml-5">
+                            <div class="text-sm font-medium text-gray-500">Menunggu Verifikasi</div>
+                            <div class="text-3xl font-semibold text-yellow-600">{{ $stats['pending'] ?? 0 }}</div>
+                        </div>
                     </div>
-                    <div class="ml-5">
-                        <div class="text-sm font-medium text-gray-500">Menunggu Verifikasi</div>
-                        <div class="text-3xl font-semibold text-yellow-600">{{ $stats['pending'] ?? 0 }}</div>
-                    </div>
-                </div>
+                </a>
             </div>
 
             <!-- Card 4 - Pembayaran Sukses -->
             <div class="bg-white overflow-hidden shadow-sm rounded-lg">
-                <div class="p-6 flex items-center">
-                    <div class="rounded-md bg-green-500 p-3">
-                        <svg class="h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+                <a href="{{ route('admin.payments', ['status' => 'verified']) }}" class="block hover:bg-gray-50 transition-colors duration-150">
+                    <div class="p-6 flex items-center">
+                        <div class="rounded-md bg-green-500 p-3">
+                            <svg class="h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div class="ml-5">
+                            <div class="text-sm font-medium text-gray-500">Pembayaran Sukses</div>
+                            <div class="text-3xl font-semibold text-green-600">{{ $stats['verified'] ?? 0 }}</div>
+                        </div>
                     </div>
-                    <div class="ml-5">
-                        <div class="text-sm font-medium text-gray-500">Pembayaran Sukses</div>
-                        <div class="text-3xl font-semibold text-green-600">{{ $stats['verified'] ?? 0 }}</div>
-                    </div>
-                </div>
+                </a>
             </div>
         </div>
 

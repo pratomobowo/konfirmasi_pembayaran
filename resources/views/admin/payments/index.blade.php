@@ -136,17 +136,6 @@
                                                 </svg>
                                                 Detail
                                             </button>
-                                            
-                                            @if($payment->status === 'pending')
-                                            <button type="button"
-                                                onclick="quickVerify({{ $payment->id }})"
-                                                class="inline-flex items-center justify-center rounded-md px-3 py-1.5 bg-green-600 text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors duration-200">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                                                </svg>
-                                                Verifikasi
-                                            </button>
-                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -282,41 +271,6 @@
 
     @push('scripts')
     <script>
-        // Fungsi untuk verifikasi cepat dari tabel
-        function quickVerify(paymentId) {
-            if (confirm('Apakah Anda yakin ingin memverifikasi pembayaran ini?')) {
-                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                
-                fetch(`/admin/payments/${paymentId}/verify`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': csrfToken,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({})
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        alert('Pembayaran berhasil diverifikasi!');
-                        location.reload(); // Reload halaman untuk memperbarui data
-                    } else {
-                        alert('Terjadi kesalahan. Silakan coba lagi.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Terjadi kesalahan. Silakan coba lagi.');
-                });
-            }
-        }
-        
         // Fungsi untuk membuka modal pembayaran
         function openPaymentModal(id) {
             const button = document.querySelector(`button[data-id="${id}"]`);

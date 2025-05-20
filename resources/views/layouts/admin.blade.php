@@ -8,7 +8,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
 
-    <title>{{ config('app.name', 'USBYPKP Admin') }}</title>
+    <title>{{ config('app.name', 'USBYPKP Konfirmasi Pembayaran') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -23,7 +23,7 @@
         <div class="hidden md:flex md:flex-col md:w-64 md:fixed md:inset-y-0 bg-gradient-to-b from-blue-700 to-blue-900 text-white shadow-lg">
             <!-- Logo -->
             <div class="flex items-center justify-center h-16 border-b border-blue-800">
-                <div class="text-xl font-bold">USBYPKP Admin</div>
+            <img src="{{ asset('images/logo.png') }}" alt="USBYPKP Logo" class="h-8 sm:h-12 w-auto">
             </div>
             
             <!-- Navigation Items -->

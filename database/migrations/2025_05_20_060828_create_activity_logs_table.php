@@ -12,19 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('activity_logs', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
+            $table->increments('id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('user_name')->nullable();
             $table->string('user_role')->nullable();
-            $table->string('action'); // login, logout, create, update, delete, etc.
-            $table->string('module'); // users, payments, settings, etc.
-            $table->string('reference_id')->nullable(); // ID of the affected record
+            $table->string('action');
+            $table->string('module');
+            $table->string('reference_id')->nullable();
             $table->text('description')->nullable();
             $table->text('old_values')->nullable();
             $table->text('new_values')->nullable();
             $table->string('ip_address')->nullable();
             $table->string('user_agent')->nullable();
-            $table->timestamps();
+            $table->dateTime('created_at')->nullable();
+            $table->dateTime('updated_at')->nullable();
         });
     }
 

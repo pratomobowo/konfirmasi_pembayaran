@@ -12,18 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('payments', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->string('student_name');
-            $table->string('nim'); // Removed unique constraint
+            $table->string('nim');
             $table->string('email');
             $table->string('phone_number')->nullable();
             $table->string('payment_type');
             $table->decimal('amount', 10, 2);
-            $table->string('payment_proof'); // Path to the payment proof file
+            $table->string('payment_proof');
             $table->enum('status', ['pending', 'verified', 'rejected'])->default('pending');
-            $table->text('notes')->nullable(); // Admin notes
-            $table->timestamp('verified_at')->nullable();
-            $table->timestamps();
+            $table->text('notes')->nullable();
+            $table->dateTime('verified_at')->nullable();
+            $table->dateTime('created_at')->nullable();
+            $table->dateTime('updated_at')->nullable();
         });
     }
 

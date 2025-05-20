@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payment_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->unique();
+        Schema::create('settings', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('key')->unique();
+            $table->text('value')->nullable();
+            $table->string('group')->nullable();
             $table->string('description')->nullable();
-            $table->boolean('is_active')->default(true);
-            $table->timestamps();
+            $table->dateTime('created_at')->nullable();
+            $table->dateTime('updated_at')->nullable();
         });
     }
 
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payment_types');
+        Schema::dropIfExists('settings');
     }
 };

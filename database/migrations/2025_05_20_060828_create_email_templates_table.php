@@ -12,13 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('email_templates', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
             $table->string('name');
             $table->string('subject');
             $table->text('body');
-            $table->string('trigger_type', 50)->unique();
+            $table->string('trigger_type')->unique();
             $table->boolean('is_active')->default(true);
-            $table->timestamps();
+            $table->dateTime('created_at')->nullable();
+            $table->dateTime('updated_at')->nullable();
         });
     }
 
@@ -29,4 +30,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('email_templates');
     }
-}; 
+};
