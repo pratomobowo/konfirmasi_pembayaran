@@ -14,7 +14,7 @@ class PaymentTypeController extends Controller
     public function index()
     {
         // Only allow super admin and finance admin to access
-        if (auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'finance_admin') {
+        if (auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'admin_keuangan') {
             abort(403, 'Unauthorized action.');
         }
         
@@ -28,7 +28,7 @@ class PaymentTypeController extends Controller
     public function create()
     {
         // Only allow super admin and finance admin to access
-        if (auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'finance_admin') {
+        if (auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'admin_keuangan') {
             abort(403, 'Unauthorized action.');
         }
         
@@ -41,7 +41,7 @@ class PaymentTypeController extends Controller
     public function store(Request $request)
     {
         // Only allow super admin and finance admin to access
-        if (auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'finance_admin') {
+        if (auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'admin_keuangan') {
             abort(403, 'Unauthorized action.');
         }
         
@@ -75,7 +75,7 @@ class PaymentTypeController extends Controller
     public function edit(PaymentType $paymentType)
     {
         // Only allow super admin and finance admin to access
-        if (auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'finance_admin') {
+        if (auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'admin_keuangan') {
             abort(403, 'Unauthorized action.');
         }
         
@@ -88,7 +88,7 @@ class PaymentTypeController extends Controller
     public function update(Request $request, PaymentType $paymentType)
     {
         // Only allow super admin and finance admin to access
-        if (auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'finance_admin') {
+        if (auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'admin_keuangan') {
             abort(403, 'Unauthorized action.');
         }
         
@@ -126,7 +126,7 @@ class PaymentTypeController extends Controller
     public function destroy(PaymentType $paymentType)
     {
         // Only allow super admin and finance admin to access
-        if (auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'finance_admin') {
+        if (auth()->user()->role !== 'super_admin' && auth()->user()->role !== 'admin_keuangan') {
             abort(403, 'Unauthorized action.');
         }
         
