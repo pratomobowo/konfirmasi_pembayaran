@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Aplikasi Konfirmasi Pembayaran'),
+    'name' => env('APP_NAME', 'Aplikasi Konfirmasi Keuangan'),
 
     /*
     |--------------------------------------------------------------------------

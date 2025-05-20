@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Konfirmasi Pembayaran Mahasiswa') }}</title>
+        <title>{{ config('app.name', 'Aplikasi Konfirmasi Keuangan') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -177,7 +177,7 @@
                             <img src="{{ asset('images/logo.png') }}" alt="USBYPKP Logo" class="h-10 w-auto">
                         </a>
                         <p class="mt-2 text-sm text-blue-100">
-                            Sistem Konfirmasi Pembayaran Mahasiswa
+                            Aplikasi Konfirmasi Keuangan
                         </p>
                     </div>
                     

@@ -8,7 +8,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
 
-    <title>{{ config('app.name', 'Aplikasi Konfirmasi Pembayaran') }}</title>
+    <title>{{ config('app.name', 'Aplikasi Konfirmasi Keuangan') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
