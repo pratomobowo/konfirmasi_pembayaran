@@ -77,12 +77,20 @@ class ReportController extends Controller
         $payments = Payment::whereYear('created_at', $month->year)
             ->whereMonth('created_at', $month->month)
             ->orderBy('created_at')
-            ->get();
+            ->paginate(20);
             
         // Calculate statistics
-        $totalPayments = $payments->count();
-        $verifiedPayments = $payments->where('status', 'verified')->count();
-        $totalAmount = $payments->where('status', 'verified')->sum('amount');
+        $totalPayments = Payment::whereYear('created_at', $month->year)
+            ->whereMonth('created_at', $month->month)
+            ->count();
+        $verifiedPayments = Payment::whereYear('created_at', $month->year)
+            ->whereMonth('created_at', $month->month)
+            ->where('status', 'verified')
+            ->count();
+        $totalAmount = Payment::whereYear('created_at', $month->year)
+            ->whereMonth('created_at', $month->month)
+            ->where('status', 'verified')
+            ->sum('amount');
         
         // Get daily breakdown - using SQLite compatible functions
         $dailyBreakdown = DB::table('payments')
@@ -121,12 +129,12 @@ class ReportController extends Controller
         // Get payments for the year
         $payments = Payment::whereYear('created_at', $selectedYear)
             ->orderBy('created_at')
-            ->get();
+            ->paginate(20);
             
         // Calculate statistics
-        $totalPayments = $payments->count();
-        $verifiedPayments = $payments->where('status', 'verified')->count();
-        $totalAmount = $payments->where('status', 'verified')->sum('amount');
+        $totalPayments = Payment::whereYear('created_at', $selectedYear)->count();
+        $verifiedPayments = Payment::whereYear('created_at', $selectedYear)->where('status', 'verified')->count();
+        $totalAmount = Payment::whereYear('created_at', $selectedYear)->where('status', 'verified')->sum('amount');
         
         // Get monthly breakdown - Using SQLite compatible functions
         $monthlyBreakdown = DB::table('payments')
