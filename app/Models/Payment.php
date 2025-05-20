@@ -19,7 +19,9 @@ class Payment extends Model
         'payment_proof',
         'status',
         'notes',
+        'admin_note',
         'verified_at',
+        'verified_by'
     ];
     
     protected $casts = [

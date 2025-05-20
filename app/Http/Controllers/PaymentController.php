@@ -4,11 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Payment;
 use App\Models\PaymentType;
+use App\Services\ActivityLogService;
+use App\Services\EmailService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class PaymentController extends Controller
 {
+    protected $emailService;
+
+    public function __construct(EmailService $emailService)
+    {
+        $this->emailService = $emailService;
+    }
+
     // Display the payment list for public view
     public function index()
     {
@@ -45,7 +54,7 @@ class PaymentController extends Controller
         $path = $request->file('payment_proof')->store('payment_proofs', 'public');
 
         // Create payment record
-        Payment::create([
+        $payment = Payment::create([
             'student_name' => $request->student_name,
             'nim' => $request->nim,
             'email' => $request->email,
@@ -55,6 +64,19 @@ class PaymentController extends Controller
             'payment_proof' => $path,
             'status' => 'pending',
         ]);
+
+        // Log payment creation
+        if (auth()->check()) {
+            ActivityLogService::logCreate(
+                'payment',
+                "Pembayaran baru dibuat untuk {$request->student_name} (NIM: {$request->nim})",
+                $payment,
+                $payment->id
+            );
+        }
+
+        // Send email notification
+        $this->emailService->sendPaymentUploadedEmail($payment);
 
         return redirect()->route('payment.success')
             ->with('success', 'Bukti pembayaran berhasil dikirim. Silahkan tunggu proses verifikasi.');

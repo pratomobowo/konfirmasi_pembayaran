@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\PaymentTypeController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\EmailTemplateController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
@@ -43,9 +44,13 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->name('admi
     Route::resource('payment-types', PaymentTypeController::class, ['except' => ['show']]);
     
     // Settings module
-    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
-    Route::post('/settings/smtp', [SettingController::class, 'updateSmtp'])->name('settings.smtp.update');
-    Route::post('/settings/smtp/test', [SettingController::class, 'testSmtp'])->name('settings.smtp.test');
+    Route::get('/settings', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.index');
+    Route::get('/settings/smtp', [App\Http\Controllers\Admin\SettingController::class, 'index'])->name('settings.smtp');
+    Route::post('/settings/smtp', [App\Http\Controllers\Admin\SettingController::class, 'updateSmtp'])->name('settings.smtp.update');
+    Route::post('/settings/smtp/test', [App\Http\Controllers\Admin\SettingController::class, 'testSmtp'])->name('settings.smtp.test');
+    
+    // Documentation
+    Route::get('/documentation', [App\Http\Controllers\Admin\DocumentationController::class, 'index'])->name('documentation.index');
     
     // Reports module
     Route::prefix('reports')->name('reports.')->group(function () {
@@ -55,6 +60,14 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->name('admi
         Route::get('/yearly', [ReportController::class, 'yearly'])->name('yearly');
         Route::get('/custom', [ReportController::class, 'custom'])->name('custom');
         Route::post('/export', [ReportController::class, 'export'])->name('export');
+    });
+    
+    // Activity Logs
+    Route::prefix('activity-logs')->name('activity-logs.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\ActivityLogController::class, 'index'])->name('index');
+        Route::get('/{activityLog}', [App\Http\Controllers\Admin\ActivityLogController::class, 'show'])->name('show');
+        Route::delete('/{activityLog}', [App\Http\Controllers\Admin\ActivityLogController::class, 'destroy'])->name('destroy');
+        Route::post('/clear-all', [App\Http\Controllers\Admin\ActivityLogController::class, 'clearAll'])->name('clear-all');
     });
     
     // User management - accessible by both super admin and finance admin
@@ -73,6 +86,15 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->name('admi
     Route::get('/finance-users/{user}/edit', [UserController::class, 'edit'])->name('finance-users.edit');
     Route::put('/finance-users/{user}', [UserController::class, 'update'])->name('finance-users.update');
     Route::delete('/finance-users/{user}', [UserController::class, 'destroy'])->name('finance-users.destroy');
+    
+    // Email Templates
+    Route::get('/email-templates', [EmailTemplateController::class, 'index'])->name('email-templates.index');
+    Route::get('/email-templates/create', [EmailTemplateController::class, 'create'])->name('email-templates.create');
+    Route::post('/email-templates', [EmailTemplateController::class, 'store'])->name('email-templates.store');
+    Route::get('/email-templates/{emailTemplate}/edit', [EmailTemplateController::class, 'edit'])->name('email-templates.edit');
+    Route::put('/email-templates/{emailTemplate}', [EmailTemplateController::class, 'update'])->name('email-templates.update');
+    Route::delete('/email-templates/{emailTemplate}', [EmailTemplateController::class, 'destroy'])->name('email-templates.destroy');
+    Route::post('/email-templates/{emailTemplate}/toggle-status', [EmailTemplateController::class, 'toggleStatus'])->name('email-templates.toggle-status');
 });
 
 // User profile

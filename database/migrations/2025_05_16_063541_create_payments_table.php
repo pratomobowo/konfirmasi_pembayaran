@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->string('student_name');
-            $table->string('nim')->unique(); // Student ID number
+            $table->string('nim'); // Removed unique constraint
             $table->string('email');
             $table->string('phone_number')->nullable();
             $table->string('payment_type');

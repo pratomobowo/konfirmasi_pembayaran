@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\PaymentType;
+use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 
 class PaymentTypeController extends Controller
@@ -50,11 +51,19 @@ class PaymentTypeController extends Controller
             'is_active' => 'sometimes|boolean',
         ]);
 
-        PaymentType::create([
+        $paymentType = PaymentType::create([
             'name' => $request->name,
             'description' => $request->description,
             'is_active' => $request->has('is_active') ? true : false,
         ]);
+
+        // Log aktivitas pembuatan jenis pembayaran
+        ActivityLogService::logCreate(
+            'payment_type',
+            "Jenis pembayaran baru '{$paymentType->name}' telah dibuat",
+            $paymentType,
+            $paymentType->id
+        );
 
         return redirect()->route('admin.payment-types.index')
             ->with('success', 'Jenis pembayaran berhasil ditambahkan.');
@@ -89,11 +98,23 @@ class PaymentTypeController extends Controller
             'is_active' => 'sometimes|boolean',
         ]);
 
+        // Simpan data lama sebelum diupdate
+        $oldValues = $paymentType->toArray();
+        
         $paymentType->update([
             'name' => $request->name,
             'description' => $request->description,
             'is_active' => $request->has('is_active') ? true : false,
         ]);
+
+        // Log aktivitas update jenis pembayaran
+        ActivityLogService::logUpdate(
+            'payment_type',
+            "Jenis pembayaran '{$paymentType->name}' telah diperbarui",
+            $oldValues,
+            $paymentType->fresh()->toArray(),
+            $paymentType->id
+        );
 
         return redirect()->route('admin.payment-types.index')
             ->with('success', 'Jenis pembayaran berhasil diperbarui.');
@@ -116,7 +137,20 @@ class PaymentTypeController extends Controller
             return back()->with('error', 'Jenis pembayaran ini tidak dapat dihapus karena sudah digunakan dalam ' . $paymentsCount . ' pembayaran.');
         }
         
+        // Simpan data sebelum dihapus untuk log
+        $paymentTypeData = $paymentType->toArray();
+        $paymentTypeName = $paymentType->name;
+        $paymentTypeId = $paymentType->id;
+        
         $paymentType->delete();
+        
+        // Log aktivitas penghapusan jenis pembayaran
+        ActivityLogService::logDelete(
+            'payment_type',
+            "Jenis pembayaran '{$paymentTypeName}' telah dihapus",
+            (object)$paymentTypeData,
+            $paymentTypeId
+        );
         
         return redirect()->route('admin.payment-types.index')
             ->with('success', 'Jenis pembayaran berhasil dihapus.');

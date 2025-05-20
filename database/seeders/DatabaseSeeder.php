@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             PaymentTypeSeeder::class,
             SettingSeeder::class,
+            EmailTemplateSeeder::class,
         ]);
     }
 }

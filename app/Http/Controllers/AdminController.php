@@ -4,11 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Payment;
 use App\Models\User;
+use App\Services\ActivityLogService;
+use App\Services\EmailService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
+    protected $emailService;
+
+    public function __construct(EmailService $emailService)
+    {
+        $this->emailService = $emailService;
+    }
+
     // Admin dashboard
     public function dashboard()
     {
@@ -60,10 +69,40 @@ class AdminController extends Controller
     public function verify($id)
     {
         $payment = Payment::findOrFail($id);
+        
+        // Simpan data lama sebelum diupdate
+        $oldValues = $payment->toArray();
+        
         $payment->update([
             'status' => 'verified',
             'verified_at' => now(),
+            'verified_by' => auth()->id(),
         ]);
+        
+        // Log aktivitas verifikasi pembayaran
+        ActivityLogService::logUpdate(
+            'payment',
+            "Pembayaran untuk {$payment->student_name} (NIM: {$payment->nim}) telah diverifikasi",
+            $oldValues,
+            $payment->fresh()->toArray(),
+            $payment->id
+        );
+        
+        // Send email notification
+        try {
+            $this->emailService->sendPaymentVerifiedEmail($payment);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to send verification email: " . $e->getMessage());
+        }
+        
+        // Check if request wants JSON response (from AJAX)
+        if (request()->wantsJson() || request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Pembayaran berhasil diverifikasi.',
+                'payment' => $payment
+            ]);
+        }
         
         return redirect()->route('admin.payments.show', $id)
             ->with('success', 'Pembayaran berhasil diverifikasi.');
@@ -72,15 +111,54 @@ class AdminController extends Controller
     // Reject a payment
     public function reject(Request $request, $id)
     {
-        $request->validate([
-            'notes' => 'required|string|max:500'
-        ]);
+        $notes = $request->input('notes');
+        
+        // Validasi data
+        if (empty($notes)) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Alasan penolakan wajib diisi.'
+                ], 422);
+            }
+            
+            return back()->withErrors(['notes' => 'Alasan penolakan wajib diisi.']);
+        }
         
         $payment = Payment::findOrFail($id);
+        
+        // Simpan data lama sebelum diupdate
+        $oldValues = $payment->toArray();
+        
         $payment->update([
             'status' => 'rejected',
-            'notes' => $request->notes,
+            'notes' => $notes,
         ]);
+        
+        // Log aktivitas penolakan pembayaran
+        ActivityLogService::logUpdate(
+            'payment',
+            "Pembayaran untuk {$payment->student_name} (NIM: {$payment->nim}) telah ditolak dengan catatan: {$notes}",
+            $oldValues,
+            $payment->fresh()->toArray(),
+            $payment->id
+        );
+        
+        // Send email notification
+        try {
+            $this->emailService->sendPaymentRejectedEmail($payment);
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error("Failed to send rejection email: " . $e->getMessage());
+        }
+        
+        // Check if request wants JSON response (from AJAX)
+        if (request()->wantsJson() || request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Pembayaran telah ditolak.',
+                'payment' => $payment
+            ]);
+        }
         
         return redirect()->route('admin.payments.show', $id)
             ->with('success', 'Pembayaran telah ditolak.');
