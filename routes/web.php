@@ -38,6 +38,7 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->name('admi
     Route::get('/payments/{id}', [AdminController::class, 'show'])->name('payments.show');
     Route::post('/payments/{id}/verify', [AdminController::class, 'verify'])->name('payments.verify');
     Route::post('/payments/{id}/reject', [AdminController::class, 'reject'])->name('payments.reject');
+    Route::delete('/payments/{id}', [AdminController::class, 'destroy'])->name('payments.destroy');
     Route::get('/export', [AdminController::class, 'export'])->name('export');
     
     // Payment Types management

@@ -136,6 +136,16 @@
                                                 </svg>
                                                 Detail
                                             </button>
+                                            @if(auth()->user()->role === 'super_admin')
+                                            <button type="button" 
+                                                class="inline-flex items-center justify-center rounded-md px-3 py-1.5 bg-red-600 text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-200"
+                                                onclick="confirmDelete({{ $payment->id }}, '{{ $payment->student_name }}')">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                                Hapus
+                                            </button>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
@@ -266,6 +276,11 @@
                     </div>
                 </div>
                 <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    @if(auth()->user()->role === 'super_admin')
+                    <button type="button" id="delete-payment-btn" class="ml-3 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm">
+                        Hapus Pembayaran
+                    </button>
+                    @endif
                     <button type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" onclick="closePaymentModal()">
                         Tutup
                     </button>
@@ -276,6 +291,32 @@
 
     @push('scripts')
     <script>
+        // Fungsi untuk konfirmasi hapus pembayaran
+        function confirmDelete(id, name) {
+            if (confirm(`Apakah Anda yakin ingin menghapus pembayaran dari ${name}? Tindakan ini tidak dapat dibatalkan.`)) {
+                // Buat form untuk delete request
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/admin/payments/${id}`;
+                form.style.display = 'none';
+                
+                const method = document.createElement('input');
+                method.type = 'hidden';
+                method.name = '_method';
+                method.value = 'DELETE';
+                
+                const csrf = document.createElement('input');
+                csrf.type = 'hidden';
+                csrf.name = '_token';
+                csrf.value = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                
+                form.appendChild(method);
+                form.appendChild(csrf);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+        
         // Fungsi untuk membuka modal pembayaran
         function openPaymentModal(id) {
             const button = document.querySelector(`button[data-id="${id}"]`);
@@ -335,6 +376,13 @@
                 } else {
                     adminNotes.classList.add('hidden');
                 }
+            }
+            
+            // Setup delete button
+            if (document.getElementById('delete-payment-btn')) {
+                document.getElementById('delete-payment-btn').onclick = function() {
+                    confirmDelete(id, button.getAttribute('data-name'));
+                };
             }
             
             // Tampilkan modal
