@@ -200,4 +200,44 @@ class AdminController extends Controller
         
         return response()->stream($callback, 200, $headers);
     }
+    
+    // Delete a payment
+    public function destroy($id)
+    {
+        $payment = Payment::findOrFail($id);
+        
+        // Simpan informasi untuk pesan log
+        $studentName = $payment->student_name;
+        $nim = $payment->nim;
+        
+        // Simpan data sebelum dihapus untuk log
+        $paymentData = $payment->toArray();
+        
+        // Hapus bukti pembayaran jika ada
+        if ($payment->payment_proof && Storage::exists($payment->payment_proof)) {
+            Storage::delete($payment->payment_proof);
+        }
+        
+        // Hapus data pembayaran
+        $payment->delete();
+        
+        // Log aktivitas penghapusan pembayaran
+        ActivityLogService::logDelete(
+            'payment',
+            "Pembayaran untuk {$studentName} (NIM: {$nim}) telah dihapus",
+            $paymentData,
+            $id
+        );
+        
+        // Check if request wants JSON response (from AJAX)
+        if (request()->wantsJson() || request()->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Pembayaran berhasil dihapus.'
+            ]);
+        }
+        
+        return redirect()->route('admin.payments')
+            ->with('success', 'Pembayaran berhasil dihapus.');
+    }
 }

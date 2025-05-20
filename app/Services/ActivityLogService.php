@@ -123,7 +123,7 @@ class ActivityLogService
      * 
      * @param string $module Nama modul
      * @param string $description Deskripsi aktivitas
-     * @param mixed $model Model yang dihapus
+     * @param mixed $model Model atau array data yang dihapus
      * @param int|null $referenceId ID referensi (opsional)
      * @return ActivityLog
      */
@@ -147,7 +147,13 @@ class ActivityLogService
         }
 
         if ($model) {
-            $data['old_values'] = $model->toArray();
+            // Check if $model is already an array
+            if (is_array($model)) {
+                $data['old_values'] = $model;
+            } else {
+                // Otherwise, assume it's an object with toArray() method
+                $data['old_values'] = $model->toArray();
+            }
         }
 
         return self::log($data);
