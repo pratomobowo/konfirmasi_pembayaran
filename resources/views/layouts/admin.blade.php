@@ -64,12 +64,14 @@
                         Laporan
                     </x-admin-nav-link>
 
+                    @if(Auth::user()->isSuperAdmin())
                     <x-admin-nav-link :href="route('admin.activity-logs.index')" :active="request()->routeIs('admin.activity-logs*')">
                         <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18" />
                         </svg>
                         Log Aktivitas
                     </x-admin-nav-link>
+                    @endif
 
                     <x-admin-nav-link :href="route('admin.documentation.index')" :active="request()->routeIs('admin.documentation*')">
                         <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -220,15 +222,6 @@
                             </div>
                         </a>
                         
-                        <a href="{{ route('admin.activity-logs.index') }}" class="block p-2 rounded-md text-white hover:bg-indigo-800 {{ request()->routeIs('admin.activity-logs*') ? 'bg-indigo-800' : '' }}">
-                            <div class="flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18" />
-                                </svg>
-                                <span>Log Aktivitas</span>
-                            </div>
-                        </a>
-                        
                         <a href="{{ route('admin.documentation.index') }}" class="block p-2 rounded-md text-white hover:bg-indigo-800 {{ request()->routeIs('admin.documentation*') ? 'bg-indigo-800' : '' }}">
                             <div class="flex items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -237,6 +230,17 @@
                                 <span>Dokumentasi</span>
                             </div>
                         </a>
+                        
+                        @if(Auth::user()->isSuperAdmin())
+                        <a href="{{ route('admin.activity-logs.index') }}" class="block p-2 rounded-md text-white hover:bg-indigo-800 {{ request()->routeIs('admin.activity-logs*') ? 'bg-indigo-800' : '' }}">
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="mr-3 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18" />
+                                </svg>
+                                <span>Log Aktivitas</span>
+                            </div>
+                        </a>
+                        @endif
                         
                         <div class="relative mt-4">
                             <button type="button" id="mobile-settings-button" class="w-full flex justify-between items-center p-2 rounded-md text-white hover:bg-indigo-800">
