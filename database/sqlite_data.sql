@@ -1,5 +1,7 @@
--- SQLite to MySQL Data Migration
--- Generated on 2025-05-20 05:41:28
+-- SQLite to MySQL Data Migration for konfirmasi_usbypkp
+-- Adjusted for MySQL compatibility
+
+USE konfirmasi_usbypkp;
 
 SET FOREIGN_KEY_CHECKS=0;
 
@@ -28,21 +30,6 @@ INSERT INTO `activity_logs` (`id`, `user_id`, `user_name`, `user_role`, `action`
 INSERT INTO `email_templates` (`id`, `name`, `subject`, `body`, `trigger_type`, `is_active`, `created_at`, `updated_at`) VALUES
 ('1', 'Pembayaran Ditolak', 'Pembayaran anda ditolak!', 'Halo {nama}, pembayaran anda di tolak', 'payment_rejected', '1', '2025-05-18 11:52:41', '2025-05-18 11:52:41');
 
--- Table data for `migrations`
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-('1', '0001_01_01_000000_create_users_table', '1'),
-('2', '0001_01_01_000001_create_cache_table', '1'),
-('3', '0001_01_01_000002_create_jobs_table', '1'),
-('4', '2025_05_16_063541_create_payments_table', '1'),
-('5', '2025_05_16_165956_add_role_to_users_table', '2'),
-('6', '2025_05_17_060633_create_payment_types_table', '3'),
-('7', '2025_05_17_063211_create_settings_table', '4'),
-('8', '2025_05_17_231045_create_activity_logs_table', '5'),
-('10', '2024_03_21_000000_create_email_templates_table', '6'),
-('11', '2025_05_18_010623_remove_unique_constraint_from_nim_in_payments_table', '7'),
-('12', '2025_05_18_010653_remove_unique_constraint_from_nim_in_payments_table', '7'),
-('13', '2024_03_21_create_settings_table', '8');
-
 -- Table data for `payment_types`
 INSERT INTO `payment_types` (`id`, `name`, `description`, `is_active`, `created_at`, `updated_at`) VALUES
 ('1', 'SPP', 'Biaya Sumbangan Pembinaan Pendidikan', '1', '2025-05-17 06:21:12', '2025-05-17 06:21:12'),
@@ -54,18 +41,13 @@ INSERT INTO `payment_types` (`id`, `name`, `description`, `is_active`, `created_
 
 -- Table data for `payments`
 INSERT INTO `payments` (`id`, `student_name`, `nim`, `email`, `phone_number`, `payment_type`, `amount`, `payment_proof`, `status`, `notes`, `verified_at`, `created_at`, `updated_at`) VALUES
-('1', 'Pratomo bowo', '6311055', 'pratomobowo@gmail.com', '082215711850', 'Praktikum', '200000', 'payment_proofs/z1qhnAasYVFC9V4bWGkCiNwPWdtRzX8TRgsZgBRB.jpg', 'verified', NULL, '2025-05-16 17:48:45', '2025-05-16 15:36:21', '2025-05-16 17:48:45'),
-('2', 'Asiyah', '6311050', 'asiyah@gmail.com', '0822222222', 'SPP', '1800000', 'payment_proofs/JPxz4GwQsFJSEJxTsPZrDW3oWMU8m7aVcRzIUSZc.png', 'rejected', 'Bukti Transfer tidak valid', NULL, '2025-05-17 07:18:04', '2025-05-17 07:18:51'),
-('3', 'Fatimah Zahira', '123456', 'zahira@gmail.com', '082213311331', 'Praktikum', '2000000', 'payment_proofs/v9ao82Nhkm4TKm4T3hyH9g37FrA3Qjjd0sxuuzJZ.png', 'pending', NULL, NULL, '2025-05-17 15:54:44', '2025-05-17 15:54:44'),
-('4', 'Cici', '6311054', 'bowo@usbypkp.ac.id', '080808080', 'Praktikum', '150000', 'payment_proofs/Up1SRWHbFEAlwFITdEQ7aFPDxLfPeSyXVEcLhgS7.jpg', 'verified', NULL, '2025-05-18 01:10:04', '2025-05-18 01:03:31', '2025-05-18 01:10:04'),
-('5', 'Cici', '6311054', 'bowo@usbypkp.ac.id', '080808080', 'Praktikum', '150000', 'payment_proofs/w1eKjcb3Q479imiBUbOU80yDOgQClBii7RkfSSZX.jpg', 'rejected', 'kacau sih', NULL, '2025-05-18 01:08:45', '2025-05-18 11:53:08'),
-('6', 'bbh', '12345', 'bowo@usbypkp.ac.id', '1234', 'SPP', '20000', 'payment_proofs/aMpt1jTlt8yzxOYoQVc7V5TLvjfXQV9yH118Y9Mb.png', 'rejected', 'karena', NULL, '2025-05-18 12:00:13', '2025-05-18 12:00:54'),
-('7', 'bowo', '6311055', 'bowo@usbypkp.ac.id', '020202020', 'Praktikum', '522222', 'payment_proofs/MqCjqDt4bibsjQrHfTCaUafcgQcqZEuwPnzttBZv.png', 'rejected', 'salah gambar', NULL, '2025-05-19 07:46:07', '2025-05-19 07:46:45');
-
--- Table data for `sessions`
-INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('tzhfdyyoDW0etqCCTZYzMnNvUdtGJC9E5Pf3bDvB', NULL, '127.0.0.1', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiYlk1aFA3d1dFZVVLbmpWUVMxQzNidlJ5UEpVVmV4MkJQeERFazd0OCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMCI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fX0=', '1747712087'),
-('wZMnHbLc56BczdDwluiX6m8EXLAmeSYPTLwMwHI8', '1', '127.0.0.1', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoicktPSnQ0aExNN3lwQ1JLQnppQW1xYTZzVEVTdzZpVGFRV1U4NmlGdyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzY6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hZG1pbi9wYXltZW50cyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==', '1747718719');
+('1', 'Pratomo bowo', '6311055', 'pratomobowo@gmail.com', '082215711850', 'Praktikum', '200000.00', 'payment_proofs/z1qhnAasYVFC9V4bWGkCiNwPWdtRzX8TRgsZgBRB.jpg', 'verified', NULL, '2025-05-16 17:48:45', '2025-05-16 15:36:21', '2025-05-16 17:48:45'),
+('2', 'Asiyah', '6311050', 'asiyah@gmail.com', '0822222222', 'SPP', '1800000.00', 'payment_proofs/JPxz4GwQsFJSEJxTsPZrDW3oWMU8m7aVcRzIUSZc.png', 'rejected', 'Bukti Transfer tidak valid', NULL, '2025-05-17 07:18:04', '2025-05-17 07:18:51'),
+('3', 'Fatimah Zahira', '123456', 'zahira@gmail.com', '082213311331', 'Praktikum', '2000000.00', 'payment_proofs/v9ao82Nhkm4TKm4T3hyH9g37FrA3Qjjd0sxuuzJZ.png', 'pending', NULL, NULL, '2025-05-17 15:54:44', '2025-05-17 15:54:44'),
+('4', 'Cici', '6311054', 'bowo@usbypkp.ac.id', '080808080', 'Praktikum', '150000.00', 'payment_proofs/Up1SRWHbFEAlwFITdEQ7aFPDxLfPeSyXVEcLhgS7.jpg', 'verified', NULL, '2025-05-18 01:10:04', '2025-05-18 01:03:31', '2025-05-18 01:10:04'),
+('5', 'Cici', '6311054', 'bowo@usbypkp.ac.id', '080808080', 'Praktikum', '150000.00', 'payment_proofs/w1eKjcb3Q479imiBUbOU80yDOgQClBii7RkfSSZX.jpg', 'rejected', 'kacau sih', NULL, '2025-05-18 01:08:45', '2025-05-18 11:53:08'),
+('6', 'bbh', '12345', 'bowo@usbypkp.ac.id', '1234', 'SPP', '20000.00', 'payment_proofs/aMpt1jTlt8yzxOYoQVc7V5TLvjfXQV9yH118Y9Mb.png', 'rejected', 'karena', NULL, '2025-05-18 12:00:13', '2025-05-18 12:00:54'),
+('7', 'bowo', '6311055', 'bowo@usbypkp.ac.id', '020202020', 'Praktikum', '522222.00', 'payment_proofs/MqCjqDt4bibsjQrHfTCaUafcgQcqZEuwPnzttBZv.png', 'rejected', 'salah gambar', NULL, '2025-05-19 07:46:07', '2025-05-19 07:46:45');
 
 -- Table data for `settings`
 INSERT INTO `settings` (`id`, `key`, `value`, `group`, `description`, `created_at`, `updated_at`) VALUES

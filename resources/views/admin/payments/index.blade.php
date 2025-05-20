@@ -145,7 +145,12 @@
                 </div>
                 
                 @if(isset($payments) && method_exists($payments, 'links'))
-                <div class="mt-4">
+                <div class="mt-4 flex justify-between items-center">
+                    <form method="GET" action="{{ route('admin.payments') }}" class="flex items-center">
+                        <input type="hidden" name="status" value="{{ request('status') }}">
+                        <input type="hidden" name="search" value="{{ request('search') }}">
+                        <x-pagination-length :paginator="$payments" />
+                    </form>
                     {{ $payments->links() }}
                 </div>
                 @endif

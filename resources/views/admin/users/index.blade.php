@@ -111,7 +111,12 @@
             </div>
 
             <div class="mt-4">
-                {{ $users->links() }}
+                <div class="flex justify-between items-center">
+                    <form method="GET" action="{{ route('admin.users.index') }}" class="flex items-center">
+                        <x-pagination-length :paginator="$users" />
+                    </form>
+                    {{ $users->links() }}
+                </div>
             </div>
         </div>
     </div>

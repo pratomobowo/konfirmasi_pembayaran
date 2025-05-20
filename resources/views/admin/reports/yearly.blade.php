@@ -311,7 +311,11 @@
                 </div>
                 
                 @if(isset($payments) && method_exists($payments, 'links'))
-                <div class="mt-4">
+                <div class="mt-4 flex justify-between items-center">
+                    <form method="GET" action="{{ route('admin.reports.yearly') }}" class="flex items-center">
+                        <input type="hidden" name="year" value="{{ $selectedYear ?? \Carbon\Carbon::now()->year }}">
+                        <x-pagination-length :paginator="$payments" />
+                    </form>
                     {{ $payments->appends(request()->except('page'))->links() }}
                 </div>
                 @endif

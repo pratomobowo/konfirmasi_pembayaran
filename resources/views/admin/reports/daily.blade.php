@@ -168,7 +168,11 @@
                 </div>
                 
                 @if(isset($payments) && method_exists($payments, 'links'))
-                <div class="mt-4">
+                <div class="mt-4 flex justify-between items-center">
+                    <form method="GET" action="{{ route('admin.reports.daily') }}" class="flex items-center">
+                        <input type="hidden" name="date" value="{{ $selectedDate ?? now()->format('Y-m-d') }}">
+                        <x-pagination-length :paginator="$payments" />
+                    </form>
                     {{ $payments->appends(request()->except('page'))->links() }}
                 </div>
                 @endif

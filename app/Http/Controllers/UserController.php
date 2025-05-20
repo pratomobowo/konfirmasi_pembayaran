@@ -16,10 +16,12 @@ class UserController extends Controller
     {
         // If super admin, show all users
         // If finance admin, show only finance admins
+        $perPage = $request->input('per_page', 10);
+        
         if ($request->user()->isSuperAdmin()) {
-            $users = User::latest()->paginate(10);
+            $users = User::latest()->paginate($perPage)->withQueryString();
         } else {
-            $users = User::where('role', User::ROLE_ADMIN_KEUANGAN)->latest()->paginate(10);
+            $users = User::where('role', User::ROLE_ADMIN_KEUANGAN)->latest()->paginate($perPage)->withQueryString();
         }
         
         return view('admin.users.index', compact('users'));

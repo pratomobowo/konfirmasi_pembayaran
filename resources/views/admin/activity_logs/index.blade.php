@@ -147,7 +147,16 @@
 
         <!-- Pagination -->
         <div class="mt-4">
-            {{ $logs->links() }}
+            <div class="flex justify-between items-center">
+                <form method="GET" action="{{ route('admin.activity-logs.index') }}" class="flex items-center">
+                    <input type="hidden" name="action" value="{{ request('action') }}">
+                    <input type="hidden" name="module" value="{{ request('module') }}">
+                    <input type="hidden" name="date_from" value="{{ request('date_from') }}">
+                    <input type="hidden" name="date_to" value="{{ request('date_to') }}">
+                    <x-pagination-length :paginator="$logs" />
+                </form>
+                {{ $logs->links() }}
+            </div>
         </div>
     </div>
 @endsection 

@@ -49,7 +49,8 @@ class ActivityLogController extends Controller
         $modules = ActivityLog::distinct()->pluck('module');
         
         // Get logs with pagination
-        $logs = $query->orderBy('created_at', 'desc')->paginate(20);
+        $perPage = $request->input('per_page', 20);
+        $logs = $query->orderBy('created_at', 'desc')->paginate($perPage)->withQueryString();
 
         return view('admin.activity_logs.index', compact('logs', 'actions', 'modules'));
     }

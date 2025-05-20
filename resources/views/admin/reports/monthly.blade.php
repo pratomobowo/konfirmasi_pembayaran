@@ -270,7 +270,11 @@
                 </div>
                 
                 @if(isset($payments) && method_exists($payments, 'links'))
-                <div class="mt-4">
+                <div class="mt-4 flex justify-between items-center">
+                    <form method="GET" action="{{ route('admin.reports.monthly') }}" class="flex items-center">
+                        <input type="hidden" name="month" value="{{ $selectedMonth ?? \Carbon\Carbon::now()->format('Y-m') }}">
+                        <x-pagination-length :paginator="$payments" />
+                    </form>
                     {{ $payments->appends(request()->except('page'))->links() }}
                 </div>
                 @endif

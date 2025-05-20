@@ -46,9 +46,10 @@ class ReportController extends Controller
         $date = Carbon::parse($selectedDate);
         
         // Get payments for selected date
+        $perPage = $request->input('per_page', 20);
         $payments = Payment::whereDate('created_at', $date)
             ->orderBy('created_at')
-            ->paginate(20);
+            ->paginate($perPage)->withQueryString();
             
         // Calculate statistics
         $totalPayments = Payment::whereDate('created_at', $date)->count();
@@ -74,10 +75,11 @@ class ReportController extends Controller
         $month = Carbon::parse($selectedMonth . '-01');
         
         // Get payments for the month
+        $perPage = $request->input('per_page', 20);
         $payments = Payment::whereYear('created_at', $month->year)
             ->whereMonth('created_at', $month->month)
             ->orderBy('created_at')
-            ->paginate(20);
+            ->paginate($perPage)->withQueryString();
             
         // Calculate statistics
         $totalPayments = Payment::whereYear('created_at', $month->year)
@@ -127,9 +129,10 @@ class ReportController extends Controller
         $selectedYear = $request->year ? intval($request->year) : Carbon::today()->year;
         
         // Get payments for the year
+        $perPage = $request->input('per_page', 20);
         $payments = Payment::whereYear('created_at', $selectedYear)
             ->orderBy('created_at')
-            ->paginate(20);
+            ->paginate($perPage)->withQueryString();
             
         // Calculate statistics
         $totalPayments = Payment::whereYear('created_at', $selectedYear)->count();
@@ -214,9 +217,10 @@ class ReportController extends Controller
             $endDateObj = Carbon::parse($endDate)->endOfDay();
             
             // Get payments for the date range
+            $perPage = $request->input('per_page', 20);
             $payments = Payment::whereBetween('created_at', [$startDateObj, $endDateObj])
                 ->orderBy('created_at')
-                ->paginate(20);
+                ->paginate($perPage)->withQueryString();
                 
             // Calculate statistics
             $totalPayments = Payment::whereBetween('created_at', [$startDateObj, $endDateObj])->count();
