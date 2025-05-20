@@ -170,59 +170,10 @@
         
         <!-- Modern Footer -->
         <footer class="modern-footer mt-12 py-8 text-white">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="md:flex md:justify-between">
-                    <div class="mb-6 md:mb-0">
-                        <a href="{{ route('home') }}" class="flex items-center">
-                            <img src="{{ asset('images/logo.png') }}" alt="USBYPKP Logo" class="h-10 w-auto">
-                        </a>
-                        <p class="mt-2 text-sm text-blue-100">
-                            Aplikasi Konfirmasi Keuangan
-                        </p>
-                    </div>
-                    
-                    <div class="grid grid-cols-2 gap-8 sm:grid-cols-3">
-                        <div>
-                            <h3 class="text-sm font-semibold text-white uppercase tracking-wider">Menu</h3>
-                            <ul class="mt-4 space-y-2">
-                                <li>
-                                    <a href="{{ route('home') }}" class="text-blue-100 hover:text-white">Beranda</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('payment.create') }}" class="text-blue-100 hover:text-white">Upload Pembayaran</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('payment.track') }}" class="text-blue-100 hover:text-white">Cek Status</a>
-                                </li>
-                            </ul>
-                        </div>
-                        
-                        <div>
-                            <h3 class="text-sm font-semibold text-white uppercase tracking-wider">Hubungi Kami</h3>
-                            <ul class="mt-4 space-y-2">
-                                <li class="flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-200 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                    </svg>
-                                    <span class="text-blue-100">keuangan@usbypkp.ac.id</span>
-                                </li>
-                                <li class="flex items-center">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-200 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                                    </svg>
-                                    <span class="text-blue-100">(021) 22-7275489</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                
-                <hr class="my-6 border-blue-400/30">
-                <div class="flex flex-col sm:flex-row justify-between">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                     <p class="text-sm text-blue-200">
                         © {{ date('Y') }} USBYPKP. Seluruh Hak Cipta Dilindungi.
                     </p>
-                </div>
             </div>
         </footer>
         
