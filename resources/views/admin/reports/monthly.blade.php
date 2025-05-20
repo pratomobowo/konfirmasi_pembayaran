@@ -22,24 +22,8 @@
             <div class="border-t border-gray-200 p-6">
                 <form action="{{ route('admin.reports.monthly') }}" method="GET" class="flex flex-wrap items-end gap-4">
                     <div class="w-full max-w-xs">
-                        <label for="month" class="block text-sm font-medium text-gray-700 mb-1">Bulan</label>
-                        <select name="month" id="month" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                            @for ($i = 1; $i <= 12; $i++)
-                                <option value="{{ $i }}" {{ (isset($selectedMonth) && $selectedMonth == $i) || (!isset($selectedMonth) && date('n') == $i) ? 'selected' : '' }}>
-                                    {{ date('F', mktime(0, 0, 0, $i, 1)) }}
-                                </option>
-                            @endfor
-                        </select>
-                    </div>
-                    <div class="w-full max-w-xs">
-                        <label for="year" class="block text-sm font-medium text-gray-700 mb-1">Tahun</label>
-                        <select name="year" id="year" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md">
-                            @for ($y = date('Y'); $y >= date('Y') - 5; $y--)
-                                <option value="{{ $y }}" {{ (isset($selectedYear) && $selectedYear == $y) || (!isset($selectedYear) && date('Y') == $y) ? 'selected' : '' }}>
-                                    {{ $y }}
-                                </option>
-                            @endfor
-                        </select>
+                        <label for="month" class="block text-sm font-medium text-gray-700 mb-1">Bulan dan Tahun</label>
+                        <input type="month" name="month" id="month" value="{{ $selectedMonth ?? Carbon\Carbon::now()->format('Y-m') }}" class="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md">
                     </div>
                     <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         Terapkan Filter
@@ -109,7 +93,7 @@
                     Grafik Pembayaran Harian
                 </h3>
                 <p class="mt-1 max-w-2xl text-sm text-gray-500">
-                    Ringkasan pembayaran harian dalam bulan {{ isset($selectedMonth) ? date('F', mktime(0, 0, 0, $selectedMonth, 1)) : date('F') }} {{ isset($selectedYear) ? $selectedYear : date('Y') }}.
+                    Ringkasan pembayaran harian dalam bulan {{ isset($selectedMonth) ? \Carbon\Carbon::parse($selectedMonth . '-01')->format('F Y') : \Carbon\Carbon::now()->format('F Y') }}.
                 </p>
             </div>
             <div class="border-t border-gray-200 p-6">
@@ -127,17 +111,16 @@
                     Rincian Pembayaran Harian
                 </h3>
                 <p class="mt-1 max-w-2xl text-sm text-gray-500">
-                    Detail pembayaran per hari dalam bulan {{ isset($selectedMonth) ? date('F', mktime(0, 0, 0, $selectedMonth, 1)) : date('F') }} {{ isset($selectedYear) ? $selectedYear : date('Y') }}.
+                    Detail pembayaran per hari dalam bulan {{ isset($selectedMonth) ? \Carbon\Carbon::parse($selectedMonth . '-01')->format('F Y') : \Carbon\Carbon::now()->format('F Y') }}.
                 </p>
             </div>
             <div class="border-t border-gray-200 p-6">
                 <div class="flex justify-between items-center mb-4">
-                    @if(isset($dailySummary) && count($dailySummary) > 0)
+                    @if(isset($dailyBreakdown) && count($dailyBreakdown) > 0)
                     <form action="{{ route('admin.reports.export') }}" method="POST" class="ml-auto">
                         @csrf
                         <input type="hidden" name="type" value="monthly">
-                        <input type="hidden" name="month" value="{{ $selectedMonth ?? date('n') }}">
-                        <input type="hidden" name="year" value="{{ $selectedYear ?? date('Y') }}">
+                        <input type="hidden" name="month" value="{{ $selectedMonth ?? \Carbon\Carbon::now()->format('Y-m') }}">
                         <button type="submit" class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -148,7 +131,7 @@
                     @endif
                 </div>
 
-                @if(isset($dailySummary) && count($dailySummary) > 0)
+                @if(isset($dailyBreakdown) && count($dailyBreakdown) > 0)
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
@@ -163,28 +146,28 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach($dailySummary as $day => $summary)
+                            @foreach($dailyBreakdown as $day)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {{ \Carbon\Carbon::parse($day)->format('d F Y') }}
+                                        {{ \Carbon\Carbon::parse($day->date)->format('d F Y') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $summary['total'] ?? 0 }}
+                                        {{ $day->total_payments ?? 0 }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $summary['verified'] ?? 0 }}
+                                        {{ $day->verified_payments ?? 0 }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $summary['pending'] ?? 0 }}
+                                        {{ $day->pending_payments ?? 0 }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $summary['rejected'] ?? 0 }}
+                                        {{ $day->rejected_payments ?? 0 }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        Rp {{ number_format($summary['amount'] ?? 0, 0, ',', '.') }}
+                                        Rp {{ number_format($day->total_amount ?? 0, 0, ',', '.') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">
-                                        <a href="{{ route('admin.reports.daily', ['date' => $day]) }}" class="hover:text-blue-900">
+                                        <a href="{{ route('admin.reports.daily', ['date' => $day->date]) }}" class="hover:text-blue-900">
                                             Lihat Detail
                                         </a>
                                     </td>
