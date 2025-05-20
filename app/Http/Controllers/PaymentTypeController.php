@@ -48,7 +48,7 @@ class PaymentTypeController extends Controller
         $request->validate([
             'name' => 'required|string|max:100|unique:payment_types',
             'description' => 'nullable|string|max:255',
-            'is_active' => 'sometimes|boolean',
+            'is_active' => 'nullable',
         ]);
 
         $paymentType = PaymentType::create([
@@ -95,7 +95,7 @@ class PaymentTypeController extends Controller
         $request->validate([
             'name' => 'required|string|max:100|unique:payment_types,name,' . $paymentType->id,
             'description' => 'nullable|string|max:255',
-            'is_active' => 'sometimes|boolean',
+            'is_active' => 'nullable',
         ]);
 
         // Simpan data lama sebelum diupdate
