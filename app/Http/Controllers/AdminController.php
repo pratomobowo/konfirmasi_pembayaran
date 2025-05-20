@@ -47,13 +47,14 @@ class AdminController extends Controller
         if ($request->has('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
+                $q->where('student_name', 'like', "%{$search}%")
                   ->orWhere('nim', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%");
             });
         }
         
-        $payments = $query->paginate(10)->withQueryString();
+        $perPage = $request->input('per_page', 10);
+        $payments = $query->paginate($perPage)->withQueryString();
         
         return view('admin.payments.index', compact('payments'));
     }
@@ -184,7 +185,7 @@ class AdminController extends Controller
             foreach ($payments as $payment) {
                 fputcsv($file, [
                     $payment->id,
-                    $payment->name,
+                    $payment->student_name,
                     $payment->nim,
                     $payment->email,
                     $payment->payment_type,
