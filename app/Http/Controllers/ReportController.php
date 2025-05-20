@@ -92,15 +92,15 @@ class ReportController extends Controller
             ->where('status', 'verified')
             ->sum('amount');
         
-        // Get daily breakdown - using SQLite compatible functions
+        // Get daily breakdown - using MySQL compatible functions
         $dailyBreakdown = DB::table('payments')
             ->select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('COUNT(*) as total_payments'),
-                DB::raw('SUM(CASE WHEN status = "verified" THEN 1 ELSE 0 END) as verified_payments'),
-                DB::raw('SUM(CASE WHEN status = "pending" THEN 1 ELSE 0 END) as pending_payments'),
-                DB::raw('SUM(CASE WHEN status = "rejected" THEN 1 ELSE 0 END) as rejected_payments'),
-                DB::raw('SUM(CASE WHEN status = "verified" THEN amount ELSE 0 END) as total_amount')
+                DB::raw("SUM(CASE WHEN status = 'verified' THEN 1 ELSE 0 END) as verified_payments"),
+                DB::raw("SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_payments"),
+                DB::raw("SUM(CASE WHEN status = 'rejected' THEN 1 ELSE 0 END) as rejected_payments"),
+                DB::raw("SUM(CASE WHEN status = 'verified' THEN amount ELSE 0 END) as total_amount")
             )
             ->whereYear('created_at', $month->year)
             ->whereMonth('created_at', $month->month)
@@ -134,22 +134,47 @@ class ReportController extends Controller
         // Calculate statistics
         $totalPayments = Payment::whereYear('created_at', $selectedYear)->count();
         $verifiedPayments = Payment::whereYear('created_at', $selectedYear)->where('status', 'verified')->count();
+        $pendingPayments = Payment::whereYear('created_at', $selectedYear)->where('status', 'pending')->count();
+        $rejectedPayments = Payment::whereYear('created_at', $selectedYear)->where('status', 'rejected')->count();
         $totalAmount = Payment::whereYear('created_at', $selectedYear)->where('status', 'verified')->sum('amount');
         
-        // Get monthly breakdown - Using SQLite compatible functions
+        // Status data for pie chart
+        $statusData = [
+            'verified' => $verifiedPayments,
+            'pending' => $pendingPayments,
+            'rejected' => $rejectedPayments
+        ];
+        
+        // Get monthly breakdown - Using MySQL compatible functions
         $monthlyBreakdown = DB::table('payments')
             ->select(
-                DB::raw('strftime("%m", created_at) as month'),
+                DB::raw('MONTH(created_at) as month'),
                 DB::raw('COUNT(*) as total_payments'),
-                DB::raw('SUM(CASE WHEN status = "verified" THEN 1 ELSE 0 END) as verified_payments'),
-                DB::raw('SUM(CASE WHEN status = "pending" THEN 1 ELSE 0 END) as pending_payments'),
-                DB::raw('SUM(CASE WHEN status = "rejected" THEN 1 ELSE 0 END) as rejected_payments'),
-                DB::raw('SUM(CASE WHEN status = "verified" THEN amount ELSE 0 END) as total_amount')
+                DB::raw("SUM(CASE WHEN status = 'verified' THEN 1 ELSE 0 END) as verified_payments"),
+                DB::raw("SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending_payments"),
+                DB::raw("SUM(CASE WHEN status = 'rejected' THEN 1 ELSE 0 END) as rejected_payments"),
+                DB::raw("SUM(CASE WHEN status = 'verified' THEN amount ELSE 0 END) as total_amount")
             )
             ->whereYear('created_at', $selectedYear)
-            ->groupBy(DB::raw('strftime("%m", created_at)'))
+            ->groupBy(DB::raw('MONTH(created_at)'))
             ->orderBy('month')
             ->get();
+            
+        // Generate data for chart.js
+        $chartData = [
+            'labels' => [],
+            'verified' => [],
+            'pending' => [],
+            'rejected' => []
+        ];
+        
+        foreach ($monthlyBreakdown as $data) {
+            $monthName = date('F', mktime(0, 0, 0, $data->month, 1));
+            $chartData['labels'][] = $monthName;
+            $chartData['verified'][] = $data->verified_payments;
+            $chartData['pending'][] = $data->pending_payments;
+            $chartData['rejected'][] = $data->rejected_payments;
+        }
         
         return view('admin.reports.yearly', compact(
             'payments', 
@@ -157,7 +182,9 @@ class ReportController extends Controller
             'totalAmount', 
             'totalPayments',
             'verifiedPayments',
-            'monthlyBreakdown'
+            'monthlyBreakdown',
+            'statusData',
+            'chartData'
         ));
     }
     

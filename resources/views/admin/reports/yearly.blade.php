@@ -187,28 +187,28 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach($monthlySummary as $month => $summary)
+                            @foreach($monthlySummary as $data)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        {{ date('F', mktime(0, 0, 0, $month, 1)) }}
+                                        {{ date('F', mktime(0, 0, 0, intval($data->month), 1)) }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $summary['total'] ?? 0 }}
+                                        {{ $data->total_payments ?? 0 }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $summary['verified'] ?? 0 }}
+                                        {{ $data->verified_payments ?? 0 }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $summary['pending'] ?? 0 }}
+                                        {{ $data->pending_payments ?? 0 }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {{ $summary['rejected'] ?? 0 }}
+                                        {{ $data->rejected_payments ?? 0 }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        Rp {{ number_format($summary['amount'] ?? 0, 0, ',', '.') }}
+                                        Rp {{ number_format($data->total_amount ?? 0, 0, ',', '.') }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">
-                                        <a href="{{ route('admin.reports.monthly', ['month' => $month, 'year' => $selectedYear ?? date('Y')]) }}" class="hover:text-blue-900">
+                                        <a href="{{ route('admin.reports.monthly', ['month' => $selectedYear.'-'.str_pad($data->month, 2, '0', STR_PAD_LEFT)]) }}" class="hover:text-blue-900">
                                             Lihat Detail
                                         </a>
                                     </td>
