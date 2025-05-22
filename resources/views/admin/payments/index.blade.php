@@ -325,77 +325,77 @@
                     const $modalData = Alpine.$data(modal);
                     if ($modalData) {
                         $modalData.open = true;
-                    }
-                }
-                
+            }
+        }
+        
                 // Always toggle the hidden class for backward compatibility
                 modal.classList.remove('hidden');
+            
+            // Set data ke modal
+            document.getElementById('payment-id').textContent = id;
+            document.getElementById('verify-payment-id').value = id;
+            document.getElementById('reject-payment-id').value = id;
+            document.getElementById('student-nim').textContent = button.getAttribute('data-nim');
+            document.getElementById('student-name').textContent = button.getAttribute('data-name');
+            document.getElementById('student-email').textContent = button.getAttribute('data-email');
+            document.getElementById('student-phone').textContent = button.getAttribute('data-phone');
+            document.getElementById('payment-type').textContent = button.getAttribute('data-type');
+            document.getElementById('payment-amount').textContent = 'Rp ' + Number(button.getAttribute('data-amount')).toLocaleString('id-ID');
+            document.getElementById('payment-date').textContent = button.getAttribute('data-date');
+            
+            // Set bukti pembayaran
+            const proofUrl = button.getAttribute('data-proof');
+            document.getElementById('payment-proof-img').src = proofUrl;
+            document.getElementById('proof-link').href = proofUrl;
+            
+            // Set status badge
+            const status = button.getAttribute('data-status');
+            const statusBadge = document.getElementById('payment-status-badge');
+            statusBadge.textContent = status === 'pending' ? 'Menunggu Verifikasi' : (status === 'verified' ? 'Terverifikasi' : 'Ditolak');
+            statusBadge.className = 'px-3 py-1 rounded-full text-sm ' + 
+                (status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
+                (status === 'verified' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'));
+            
+            // Tampilkan/sembunyikan form verifikasi dan notes berdasarkan status
+            const verificationForm = document.getElementById('verification-form');
+            const adminNotes = document.getElementById('admin-notes');
+            const verificationDateRow = document.getElementById('verification-date-row');
+            
+            if (status === 'pending') {
+                verificationForm.classList.remove('hidden');
+                adminNotes.classList.add('hidden');
+                verificationDateRow.classList.add('hidden');
+            } else {
+                verificationForm.classList.add('hidden');
                 
-                // Set data ke modal
-                document.getElementById('payment-id').textContent = id;
-                document.getElementById('verify-payment-id').value = id;
-                document.getElementById('reject-payment-id').value = id;
-                document.getElementById('student-nim').textContent = button.getAttribute('data-nim');
-                document.getElementById('student-name').textContent = button.getAttribute('data-name');
-                document.getElementById('student-email').textContent = button.getAttribute('data-email');
-                document.getElementById('student-phone').textContent = button.getAttribute('data-phone');
-                document.getElementById('payment-type').textContent = button.getAttribute('data-type');
-                document.getElementById('payment-amount').textContent = 'Rp ' + Number(button.getAttribute('data-amount')).toLocaleString('id-ID');
-                document.getElementById('payment-date').textContent = button.getAttribute('data-date');
-                
-                // Set bukti pembayaran
-                const proofUrl = button.getAttribute('data-proof');
-                document.getElementById('payment-proof-img').src = proofUrl;
-                document.getElementById('proof-link').href = proofUrl;
-                
-                // Set status badge
-                const status = button.getAttribute('data-status');
-                const statusBadge = document.getElementById('payment-status-badge');
-                statusBadge.textContent = status === 'pending' ? 'Menunggu Verifikasi' : (status === 'verified' ? 'Terverifikasi' : 'Ditolak');
-                statusBadge.className = 'px-3 py-1 rounded-full text-sm ' + 
-                    (status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
-                    (status === 'verified' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'));
-                
-                // Tampilkan/sembunyikan form verifikasi dan notes berdasarkan status
-                const verificationForm = document.getElementById('verification-form');
-                const adminNotes = document.getElementById('admin-notes');
-                const verificationDateRow = document.getElementById('verification-date-row');
-                
-                if (status === 'pending') {
-                    verificationForm.classList.remove('hidden');
-                    adminNotes.classList.add('hidden');
-                    verificationDateRow.classList.add('hidden');
+                // Tampilkan tanggal verifikasi jika ada
+                const verifiedDate = button.getAttribute('data-verified');
+                if (verifiedDate) {
+                    document.getElementById('verification-date').textContent = verifiedDate;
+                    verificationDateRow.classList.remove('hidden');
                 } else {
-                    verificationForm.classList.add('hidden');
-                    
-                    // Tampilkan tanggal verifikasi jika ada
-                    const verifiedDate = button.getAttribute('data-verified');
-                    if (verifiedDate) {
-                        document.getElementById('verification-date').textContent = verifiedDate;
-                        verificationDateRow.classList.remove('hidden');
-                    } else {
-                        verificationDateRow.classList.add('hidden');
-                    }
-                    
-                    // Tampilkan catatan admin jika ada
-                    const notes = button.getAttribute('data-notes');
-                    if (notes && notes.trim() !== '') {
-                        document.getElementById('notes-content').textContent = notes;
-                        adminNotes.classList.remove('hidden');
-                    } else {
-                        adminNotes.classList.add('hidden');
-                    }
+                    verificationDateRow.classList.add('hidden');
                 }
                 
+                // Tampilkan catatan admin jika ada
+                const notes = button.getAttribute('data-notes');
+                if (notes && notes.trim() !== '') {
+                    document.getElementById('notes-content').textContent = notes;
+                    adminNotes.classList.remove('hidden');
+                } else {
+                    adminNotes.classList.add('hidden');
+                }
+            }
+            
                 // Setup delete button
                 if (document.getElementById('delete-payment-btn')) {
                     document.getElementById('delete-payment-btn').onclick = function() {
                         confirmDelete(id, button.getAttribute('data-name'));
                     };
                 }
-                
-                // Setup form submissions via AJAX
-                setupFormSubmissions(id);
+            
+            // Setup form submissions via AJAX
+            setupFormSubmissions(id);
                 
                 // Prevent scrolling of body
                 document.body.style.overflow = 'hidden';
@@ -447,91 +447,91 @@
                     document.body.appendChild(form);
                     form.submit();
                 }
-            }
+        }
+        
+        // Setup form submissions
+        function setupFormSubmissions(paymentId) {
+            // Handle verify form
+            document.getElementById('verify-form').onsubmit = function(e) {
+                e.preventDefault();
+                if (confirm('Apakah Anda yakin ingin memverifikasi pembayaran ini?')) {
+                    // Submit verification form via AJAX
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                    
+                    fetch(`/admin/payments/${paymentId}/verify`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({})
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            alert('Pembayaran berhasil diverifikasi!');
+                            location.reload(); // Reload halaman untuk memperbarui data
+                        } else {
+                            alert('Terjadi kesalahan. Silakan coba lagi.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Terjadi kesalahan. Silakan coba lagi.');
+                    });
+                }
+            };
             
-            // Setup form submissions
-            function setupFormSubmissions(paymentId) {
-                // Handle verify form
-                document.getElementById('verify-form').onsubmit = function(e) {
-                    e.preventDefault();
-                    if (confirm('Apakah Anda yakin ingin memverifikasi pembayaran ini?')) {
-                        // Submit verification form via AJAX
-                        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                        
-                        fetch(`/admin/payments/${paymentId}/verify`, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': csrfToken,
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json'
-                            },
-                            body: JSON.stringify({})
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.success) {
-                                alert('Pembayaran berhasil diverifikasi!');
-                                location.reload(); // Reload halaman untuk memperbarui data
-                            } else {
-                                alert('Terjadi kesalahan. Silakan coba lagi.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('Terjadi kesalahan. Silakan coba lagi.');
-                        });
-                    }
-                };
+            // Handle reject form
+            document.getElementById('reject-form').onsubmit = function(e) {
+                e.preventDefault();
+                const notes = document.getElementById('reject-notes').value;
                 
-                // Handle reject form
-                document.getElementById('reject-form').onsubmit = function(e) {
-                    e.preventDefault();
-                    const notes = document.getElementById('reject-notes').value;
+                if (!notes || notes.trim() === '') {
+                    alert('Alasan penolakan wajib diisi!');
+                    return;
+                }
+                
+                if (confirm('Apakah Anda yakin ingin menolak pembayaran ini?')) {
+                    // Submit rejection form via AJAX
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                     
-                    if (!notes || notes.trim() === '') {
-                        alert('Alasan penolakan wajib diisi!');
-                        return;
-                    }
-                    
-                    if (confirm('Apakah Anda yakin ingin menolak pembayaran ini?')) {
-                        // Submit rejection form via AJAX
-                        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                        
-                        fetch(`/admin/payments/${paymentId}/reject`, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': csrfToken,
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json'
-                            },
-                            body: JSON.stringify({ notes: notes })
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.success) {
-                                alert('Pembayaran telah ditolak!');
-                                location.reload(); // Reload halaman untuk memperbarui data
-                            } else {
-                                alert('Terjadi kesalahan. Silakan coba lagi.');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
+                    fetch(`/admin/payments/${paymentId}/reject`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ notes: notes })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            alert('Pembayaran telah ditolak!');
+                            location.reload(); // Reload halaman untuk memperbarui data
+                        } else {
                             alert('Terjadi kesalahan. Silakan coba lagi.');
-                        });
-                    }
-                };
-            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Terjadi kesalahan. Silakan coba lagi.');
+                    });
+                }
+            };
+        }
         });
     </script>
     @endpush
